@@ -4,11 +4,12 @@ import { coinFlip, coinFlips, flipACoin, countFlips } from "./src/controllers/my
 import { exit } from "process";
 import { db } from './src/services/database.mjs'
 import {logdb} from './src/middleware/mymiddleware.mjs';
+import { fileURLToPath } from 'url';
 const require = createRequire(import.meta.url);
 const express = require('express')
 const fs = require('fs')
 const morgan = require('morgan')
-
+const args = require('minimist')(process.argv.slice(2))
 const HELP = (`
 server.js [options]
 
@@ -25,10 +26,6 @@ server.js [options]
 
 --help	Return this message and exit.
 `)
-
-// Dependencies
-const args = require('minimist')(process.argv.slice(2))
-
 if (args.help || args.h) {
     console.log(HELP)
     exit(0)
@@ -37,9 +34,16 @@ const HTTP_PORT = (args.port >= 1 && args.port <= 65535) ? args.port : 5555
 const DEBUG = args.debug
 const app = express()
 
+//Make sure it can handle JSON body messages
+app.use(express.json());
+
+// Expose everything in the ./public directory to the web
+app.use(express.static('./public'));
+
 // Do not create a log file
 if (args.log != "false") {
-    console.log("Creating access log")
+    let msg = fs.existsSync("./data/log/access.log") ? "Access log exists" : "Creating access log"
+    console.log(msg)
     const accessLog = fs.createWriteStream('./data/log/access.log', { flags: 'a' })
     // Set up the access logging middleware
     app.use(morgan('combined', { stream: accessLog }))
@@ -49,7 +53,9 @@ const server = app.listen(HTTP_PORT, () => {
     console.log('App listening on port %PORT%'.replace('%PORT%', HTTP_PORT))
 });
 
-// Middleware function to insert logs into database
+// **** API ENDPOINTS **** ///
+
+// Middleware function to insert logs into SQL database
 app.use(logdb);
 
 if (DEBUG) {
@@ -61,30 +67,17 @@ if (DEBUG) {
             console.error(e)
         }
     });
-
     app.get('/app/error', (req, res) => {
         throw new Error("Error test successful.")
     });
 }
-// Check endpoint /app/flip/call/heads/
-app.get('/app/flip/call/heads/', (req, res) => {
-    // Respond with status 200
+
+app.get('/app/flip/call/:guess(heads|tails)', (req, res) => {
     res.statusCode = 200;
     res.statusMessage = "OK"
-    // Write JSON object
-    res.json(flipACoin("heads"))
+    res.json(flipACoin(req.params.guess))
 });
 
-// Check endpoint /app/flip/call/tails/
-app.get('/app/flip/call/tails/', (req, res) => {
-    // Respond with status 200
-    res.statusCode = 200;
-    res.statusMessage = "OK"
-    // Write JSON object
-    res.json(flipACoin("tails"))
-});
-
-// Check endpoint /app/flips/param:[number]
 app.get('/app/flips/:number', (req, res) => {
     const raw = coinFlips(req.params.number)
     const summary = countFlips(raw)
@@ -92,34 +85,43 @@ app.get('/app/flips/:number', (req, res) => {
         raw: raw,
         summary: summary
     }
-    // Respond with status 200
     res.statusCode = 200;
     res.statusMessage = "OK"
-    // Write JSON object
     res.json(response)
 });
 
-// Check endpoint /app/flip/
 app.get('/app/flip/', (req, res) => {
-    // Respond with status 200
     res.statusCode = 200;
     res.statusMessage = "OK"
-    // Write JSON object
     res.json(coinFlip())
 });
 
-// Check endpoint /app/
 app.get('/app/', (req, res) => {
-    // Respond with status 200
     res.statusCode = 200;
-    // Respond with status message "OK"
     res.statusMessage = 'OK';
     res.writeHead(res.statusCode, { 'Content-Type': 'text/plain' });
     res.end(res.statusCode + ' ' + res.statusMessage)
 });
 
+//** POST  API endpoints for A05 */
+app.post('/app/flip/coins/', (req, res, next) => {
+    const flips = coinFlips(req.body.number)
+    const count = countFlips(flips)
+    res.status(200).json({"raw":flips,"summary":count})
+})
+
+app.post('/app/flip/call/', (req, res, next) => {
+    const game = flipACoin(req.body.guess)
+    res.status(200).json(game)
+})
+
 // Default response for any request
-app.use(function (req, res) {
+app.use((req, res) => {
     res.status(404).send('404 NOT FOUND')
 });
 
+process.on('SIGTERM', () => {
+    server.close(() => {
+        console.log('Server closed')
+    })
+})
