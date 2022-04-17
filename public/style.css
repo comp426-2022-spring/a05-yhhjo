@@ -13,3 +13,15 @@ img.bigcoin {
 img.smallcoin {
   width: 50px;
 }
+
+img.hugecoin {
+  width: 200px;
+}
+
+h1.game {
+  text-align: center;
+}
+
+p.home {
+  text-align:center;
+}
