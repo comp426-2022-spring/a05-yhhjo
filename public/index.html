@@ -39,7 +39,7 @@
   </nav>
 
   <!--Home-->
-  <div id="home" class = "active">
+  <div id="home" class="active">
     <p class="home">Click on a button to play one of the respective games!
     </p>
     <p class="home">
@@ -50,12 +50,20 @@
   <!---Flip a single coin-->
   <div id="single" class="hidden">
     <h1 class="game">Flip a coin:</h1>
+    <img id="coinflip" src="assets/img/coin.png" class="hugecoin">
     <button id="singleflip" onclick="coinFlip()">FLIP</button>
   </div>
 
   <!--Flip multiple coins-->
   <div id="multi" class="hidden">
-    <h1 class="game">Flip multiple coins!</h1>
+    <h1 class="game">Flip many coins!</h1>
+    <form action="javascript:void(0);" method="post" onSubmit="coinFlips()">
+      <label for="numberCoins"> How many flips?</label>
+      <input type="number" id="number" name="number" onSub>
+      <br>
+      <input type="submit" value="Flip Coins!" onClick="coinFlips">
+    </form>
+
   </div>
 
   <!--Guess a flip-->
@@ -64,7 +72,7 @@
   </div>
 
   <h2 id="request" class="debug">Request:</h2>
-  <h2 id = "response" class="debug">Response: </h2>
+  <h2 id="response" class="debug">Response: </h2>
 </body>
 
 </html>
