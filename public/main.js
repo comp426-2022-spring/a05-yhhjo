@@ -1,6 +1,8 @@
 const PATHS = {
     flip: '/app/flip/',
-    base: 'http://localhost:5555/'
+    base: 'http://localhost:5555/',
+    flips:'app/flips/'
+
 } 
 
 // Focus div based on nav button click
@@ -28,14 +30,16 @@ function coinFlip() {
 }
 // Flip multiple coins and show coin images in table as well as summary results
 // Enter number and press button to activate coin flip series
+// Add event listener to coins
 
 function coinFlips() {
-    const nflips = document.getElementById("nflips")
+    const nflips = document.getElementById("number").value
+    const req = PATHS.base + PATHS.flips +nflips
+    
+    // Debug
+    document.getElementById("request").innerHTML = req;
 }
 
-const form = document.querySelector("#flips");
-form.addEventListener("submit", function(event) {
-    event.preventDefault();
-})
+
 
 // Guess a flip by clicking either heads or tails button
