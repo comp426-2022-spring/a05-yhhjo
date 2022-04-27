@@ -93,11 +93,11 @@ function guessFlip(guess) {
     }).then((response) => {
         return response.json();
     }).then((outcome) => {
-        document.getElementById("call").innerHTML = " Guess: " + guess + " Flip: " + outcome.flip + " Result: " + outcome.result;
+        document.getElementById("outcome").innerHTML = "Result: " + outcome.result
+        document.getElementById("call").innerHTML = " Guess: " + guess 
         document.getElementById("callimg").setAttribute("src", "assets/img/"+guess+".png")
         document.getElementById("oneflip").innerHTML = "Flip: " + outcome.flip
         document.getElementById("flipimg").setAttribute("src", "assets/img/"+outcome.flip+".png")
-        document.getElementById("outcome").innerHTML(outcome.result)
     })
     
 }
