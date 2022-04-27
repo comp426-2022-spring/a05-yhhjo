@@ -25,7 +25,7 @@ function coinFlip() {
             return response.json();
         })
         .then(function (result) {
-            document.getElementById("response").innerHTML = result.flip;
+            document.getElementById("oneflip").innerHTML = "Flip: " + result.flip;
             document.getElementById("coinflip").setAttribute("src", "assets/img/" + result.flip + ".png")
         })
 }
@@ -37,8 +37,6 @@ function coinFlips() {
     const nflips = document.getElementById("number").value
     const api = PATHS.base + PATHS.flips
     // Debug
-    document.getElementById("request").innerHTML = "fetch: " + api + nflips;
-
     fetch(api, {
         body: JSON.stringify({ "number": nflips }),
         headers: { "Content-Type": "application/json", },
