@@ -74,9 +74,13 @@
   <!--Guess a flip-->
   <div id="guess" class="hidden">
     <h1 class="game">Heads or Tails?</h1>
-    <form action="javascript:void(0);" method="post">
-      <input type="submit" value="heads" onclick="guessFlip('heads')">
-    </form>
+      <button value="heads" onclick="guessFlip('heads')">Heads</button>
+      <button value="tails" onclick="guessFlip('tails')">Tails</button>
+      <h3 id="call"></h3>
+      <img id="callimg">
+      <h3 id="oneflip"></h3>
+      <img id="flipimg">
+      <h3 id="outcome"></h3>
   </div>
 
   <h2 id="request" class="debug">Request:</h2>
