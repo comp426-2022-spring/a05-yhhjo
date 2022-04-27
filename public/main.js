@@ -1,7 +1,8 @@
 const PATHS = {
     flip: '/app/flip/',
     base: 'http://localhost:5555/',
-    flips: 'app/flip/coins/'
+    flips: 'app/flip/coins/',
+    call: 'app/flip/call/'
 
 }
 
@@ -83,3 +84,20 @@ function resultsTable(ht, outcome) {
 }
 
 // Guess a flip by clicking either heads or tails button
+function guessFlip(guess) {
+    const api = PATHS.base + PATHS.call
+    fetch(api, {
+        body: JSON.stringify({"guess": guess}),
+        headers: { "Content-Type": "application/json", },
+        method: "post"
+    }).then((response) => {
+        return response.json();
+    }).then((outcome) => {
+        document.getElementById("call").innerHTML = " Guess: " + guess + " Flip: " + outcome.flip + " Result: " + outcome.result;
+        document.getElementById("callimg").setAttribute("src", "assets/img/"+guess+".png")
+        document.getElementById("oneflip").innerHTML = "Flip: " + outcome.flip
+        document.getElementById("flipimg").setAttribute("src", "assets/img/"+outcome.flip+".png")
+        document.getElementById("outcome").innerHTML(outcome.result)
+    })
+    
+}
