@@ -52,6 +52,7 @@
     <h1 class="game">Flip a coin:</h1>
     <img id="coinflip" src="assets/img/coin.png" class="hugecoin">
     <button id="singleflip" onclick="coinFlip()">FLIP</button>
+    <h2 id="oneflip"></h2>
   </div>
 
   <!--Flip multiple coins-->
@@ -77,14 +78,11 @@
       <button value="heads" onclick="guessFlip('heads')">Heads</button>
       <button value="tails" onclick="guessFlip('tails')">Tails</button>
       <h3 id="call"></h3>
-      <img id="callimg">
+      <img id="callimg" class="smallcoin">
       <h3 id="oneflip"></h3>
-      <img id="flipimg">
+      <img id="flipimg" class="smallcoin">
       <h3 id="outcome"></h3>
   </div>
-
-  <h2 id="request" class="debug">Request:</h2>
-  <h2 id="response" class="debug">Response: </h2>
 </body>
 
 </html>
